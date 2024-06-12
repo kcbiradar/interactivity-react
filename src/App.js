@@ -1,25 +1,56 @@
-import logo from './logo.svg';
-import './App.css';
+import {useState} from 'react';
+
+import {data} from './data.js'
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    const[state,setState] = useState({
+      index : 0,
+      showMore : false,
+    });
+
+    const hasNext = state.index < data.length - 1;
+
+    function handleNextClick() {
+        if(hasNext) {
+          setState({
+            ...state,
+            index : state.index + 1
+          })
+        } else {
+          setState({
+            ...state,
+            index : 0
+          })
+        }
+    }
+
+    function handleMoreClick() {
+          setState({
+            ...state,
+            showMore : !state.showMore
+          })
+    }
+
+    let currentData = data[state.index];
+    return(
+      <>
+          <button onClick={handleNextClick}>Next</button>
+          <h2>
+            <i>{currentData.name}</i>
+            by {currentData.artist}
+          </h2>
+          <h3>
+            ({state.index + 1} of {data.length})
+          </h3>
+          <button onClick={handleMoreClick}>
+              {state.showMore ? 'Hide' : 'Show'} details
+          </button>
+
+          {state.showMore && <p>{currentData.description}</p>}
+          <img src={currentData.url} alt={currentData.alt}/>
+      </>
+    );
+
 }
 
 export default App;
